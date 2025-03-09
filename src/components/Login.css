@@ -1,60 +1,113 @@
+
 .login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: url("../background.jpg") no-repeat center center/cover;
-  }
-  
-  .login-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 350px;
-  }
-  
-  .login-header
-  {
-    display: flex;
-    align-self: center;
-    padding: 0 12px;
-  }
-  .logo {
-    width: 12px;
-    height: 45px;
-    margin-bottom: 10px;
-  }
-  
-  .imglogo
-  {
-    width: 54px;
-    height: 44px;
-    padding: 0 10px;
-  }
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .btn {
-    width: 100%;
-    padding: 10px;
-    background: #0066ff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .links {
-    margin-top: 10px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url("../background.jpg") no-repeat center center/cover;
+}
+
+
+.login-container {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 370px;
+}
+
+.login-header
+{
+  display: flex;
+  align-self: center;
+  padding-left: 40px;
+}
+
+
+
+.logo {
+  width: 70px;
+  height: 50px;
+  margin-bottom: 12px;
+}
+
+
+.input-group {
+  margin-bottom: 15px;
+  padding-right: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 12px 5px 12px 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: left;
+  margin-left: 2px;
+}
+
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #0066ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #004ecb;
+}
+
+
+.links {
+  margin-top: 12px;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #0066ff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-link:hover {
+  color: #004ecb;
+}
+
+a {
+  color: #0066ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.headerQMK
+{
+  margin: 0;
+  font-size: 19px;
+  text-align: left;
+}
+
+.crossbar
+{
+  margin: 0;
+  color:#e7e1e1;
+  border-radius: 3px;
+}
+
+.notify
+{
+  padding: 5px;
+  text-align: left;
+}
