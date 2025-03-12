@@ -1,72 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <title> THỜI KHÓA BIỂU</title>
-    </head>
-    <body>
-        <h2> STUDENT SCHEDULE</h2>
-        <button>TKB Cá Nhân</button>
-    <button>TKB Trường</button>
-    <label>Tuần:</label> <span>4</span>
-    <label>Từ:</label> <span>03/03/2025 - 09/03/2025</span>
-    <br><br>
-    <h2>Thời khóa biểu trường</h2>
-    <table border="1" width="100%">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thời Khóa Biểu Cá Nhân</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        .schedule-item {
+            background: #f0f0f0;
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .edit-btn, .delete-btn {
+            margin-left: 5px;
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Thời Khóa Biểu Cá Nhân</h2>
+    <input type="date" id="chonNgay" onchange="capNhatTuan()">
+    <button onclick="themLich()">Thêm Lịch</button>
+    <table>
         <tr>
-            <th></th>
-            <th>Thứ 2</th>
-            <th>Thứ 3</th>
-            <th>Thứ 4</th>
-            <th>Thứ 5</th>
-            <th>Thứ 6</th>
-            <th>Thứ 7</th>
+            <th>Thứ Hai</th>
+            <th>Thứ Ba</th>
+            <th>Thứ Tư</th>
+            <th>Thứ Năm</th>
+            <th>Thứ Sáu</th>
+            <th>Thứ Bảy</th>
+            <th>Chủ Nhật</th>
         </tr>
         <tr>
-            <td rowspan="2"><b>Sáng</b></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Lập trình UDCSLD<br>Phòng: 705</td>
-            <td></td>
-            <td>CNPM<br>Phòng: C808</td>
+            <td id="mon"></td>
+            <td id="tue"></td>
+            <td id="wed"></td>
+            <td id="thu"></td>
+            <td id="fri"></td>
+            <td id="sat"></td>
+            <td id="sun"></td>
         </tr>
-        <tr>
-            <td></td>
-            <td>TMBT<br>Phòng: C803</td>
-            <td></td>
-            <td></td>
-            <td>QTCSLD<br>Phòng: C704</td>
-            <td>NMMWUD<br>Phòng: C808</td>
-        </tr>
-        <tr>
-            <td rowspan="2"><b>Chiều</b></td>
-            <td></td>
-            <td>KTPM<br>Phòng: C808</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Thực hành <br>nhâp môn Web&UD</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Tối</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </body>
+    </table>
+    <script>
+        function capNhatTuan() {
+            let chonNgay = new Date(document.getElementById("chonNgay").value);
+            let ngayTrongTuan = new Date(chonNgay);
+            ngayTrongTuan.setDate(chonNgay.getDate() - chonNgay.getDay() + 1);
+            
+            let days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+            for (let i = 0; i < 7; i++) {
+                let date = new Date(ngayTrongTuan);
+                date.setDate(ngayTrongTuan.getDate() + i);
+                document.getElementById(days[i]).dataset.date = date.toISOString().split('T')[0];
+            }
+        }
 
+        function themLich () {
+            let day = prompt("Nhập thứ (mon/tue/wed/thu/fri/sat/sun):");
+            let name = prompt("Nhập tên lịch:");
+            let time = prompt("Nhập thời gian (HH:MM):");
+            let note = prompt("Nhập ghi chú:");
+            
+            let date = document.getElementById(day).dataset.date;
+            if (!date) {
+                alert("Vui lòng chọn ngày để xác định thời khóa biểu trong tuần");
+                return;
+            }
+            
+            if (day && name && time) {
+                let TKBCN = document.getElementById(day).children;
+                let timeMoi = parseTime(time);
+                
+                for (let i = 0; i < TKBCN.length; i++) {
+                    let timeTruoc = parseTime(TKBCN[i].dataset.time);
+                    if (Math.abs(timeTruoc - timeMoi) < 60) {
+                        alert("Thời gian lịch phải cách ít nhất 1 giờ.");
+                        return;
+                    }
+                }
+                
+                let motLich = `<div class='schedule-item' data-time='${time}'>
+                    <strong>${name}</strong><br>
+                    🕒 ${time} - 📅 ${date}<br>
+                    📝 ${note}<br>
+                    <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
+                    <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>
+                </div>`;
+                
+                document.getElementById(day).appendChild(tao1Lich(motLich, time));
+                sapXepLich(day);
+            }
+        }
+        
+        function tao1Lich(html, time) {
+            let div = document.createElement("div");
+            div.innerHTML = html;
+            div.dataset.time = time;
+            return div.firstChild;
+        }
+        
+        function sapXepLich(day) {
+            let parent = document.getElementById(day);
+            let TKBCN = Array.from(parent.children);
+            TKBCN.sort((a, b) => parseTime(a.dataset.time) - parseTime(b.dataset.time));
+            parent.innerHTML = "";
+            TKBCN.forEach(s => parent.appendChild(s));
+        }
+        
+        function parseTime (time) {
+            let parts = time.split(":");
+            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        }
+        
+        function chinhSuaLich (element) {
+            let parent = element.parentElement;
+            let name = prompt("Nhập tên lịch mới:", parent.children[0].innerText);
+            let time = prompt("Nhập thời gian mới:", parent.dataset.time);
+            let note = prompt("Nhập ghi chú mới:", parent.children[2].innerText);
+            
+            if (name && time) {
+                parent.innerHTML = `<strong>${name}</strong><br>
+                    🕒 ${time} - 📅 ${parent.parentElement.dataset.date}<br>
+                    📝 ${note}<br>
+                    <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
+                    <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
+                parent.dataset.time = time;
+                sapXepLich(parent.parentElement.id);
+            }
+        }
+        
+        function xoaLich(element) {
+            element.parentElement.remove();
+        }
+    </script>
+</body>
 </html>
