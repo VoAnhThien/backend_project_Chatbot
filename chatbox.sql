@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 10, 2025 lúc 05:03 PM
+-- Thời gian đã tạo: Th3 11, 2025 lúc 05:07 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -31,6 +31,7 @@ CREATE TABLE `lichhoc` (
   `STT` int(11) NOT NULL,
   `Thu` int(8) NOT NULL,
   `Ca` int(4) NOT NULL,
+  `phong` varchar(10) NOT NULL,
   `masv` varchar(50) NOT NULL,
   `mamh` varchar(50) NOT NULL,
   `ngaybatdau` date NOT NULL,
@@ -41,9 +42,9 @@ CREATE TABLE `lichhoc` (
 -- Đang đổ dữ liệu cho bảng `lichhoc`
 --
 
-INSERT INTO `lichhoc` (`STT`, `Thu`, `Ca`, `masv`, `mamh`, `ngaybatdau`, `ngayketthuc`) VALUES
-(1, 2, 1, 'DH52201286', '001', '2025-03-09', '2025-03-27'),
-(2, 3, 3, 'DH52201105', '002', '2025-03-09', '2025-03-30');
+INSERT INTO `lichhoc` (`STT`, `Thu`, `Ca`, `phong`, `masv`, `mamh`, `ngaybatdau`, `ngayketthuc`) VALUES
+(1, 2, 1, '808', 'DH52201286', '001', '2025-03-09', '2025-03-27'),
+(2, 3, 3, '803', 'DH52201105', '002', '2025-03-09', '2025-03-30');
 
 -- --------------------------------------------------------
 
@@ -64,6 +65,28 @@ CREATE TABLE `monhoc` (
 INSERT INTO `monhoc` (`mamh`, `tenmh`, `giangvien`) VALUES
 ('001', 'HTML', 'Quan Le Huu Minh'),
 ('002', 'JavaScript', 'QuanDepTrai');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhachen`
+--
+
+CREATE TABLE `nhachen` (
+  `STT` int(11) NOT NULL,
+  `tennh` varchar(50) NOT NULL,
+  `ngaybatdau` datetime NOT NULL,
+  `ngayketthuc` datetime NOT NULL,
+  `masv` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhachen`
+--
+
+INSERT INTO `nhachen` (`STT`, `tennh`, `ngaybatdau`, `ngayketthuc`, `masv`) VALUES
+(1, 'làm bài tập HTML', '2025-03-11 14:30:45', '2025-03-17 14:30:45', 'DH52201286'),
+(2, 'làm bài tập Javascript', '2025-03-11 14:30:45', '2025-03-20 14:30:45', 'DH52201105');
 
 -- --------------------------------------------------------
 
@@ -112,6 +135,13 @@ ALTER TABLE `monhoc`
   ADD PRIMARY KEY (`mamh`);
 
 --
+-- Chỉ mục cho bảng `nhachen`
+--
+ALTER TABLE `nhachen`
+  ADD PRIMARY KEY (`STT`),
+  ADD KEY `fk_nhachen_sinhvien` (`masv`);
+
+--
 -- Chỉ mục cho bảng `sinhvien`
 --
 ALTER TABLE `sinhvien`
@@ -127,6 +157,12 @@ ALTER TABLE `sinhvien`
 ALTER TABLE `lichhoc`
   ADD CONSTRAINT `fk_monhoc` FOREIGN KEY (`mamh`) REFERENCES `monhoc` (`mamh`),
   ADD CONSTRAINT `fk_sinhvien` FOREIGN KEY (`masv`) REFERENCES `sinhvien` (`masv`);
+
+--
+-- Các ràng buộc cho bảng `nhachen`
+--
+ALTER TABLE `nhachen`
+  ADD CONSTRAINT `fk_nhachen_sinhvien` FOREIGN KEY (`masv`) REFERENCES `sinhvien` (`masv`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
