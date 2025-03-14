@@ -16,6 +16,7 @@ module.exports = (app) => {
             }
 
             if (results.length > 0) {
+                
                 res.redirect('/quenmatkhau.html?success=1')
             } else {
                 res.redirect('/quenmatkhau.html?error=Không tìm thấy tài khoản với thông tin này!')

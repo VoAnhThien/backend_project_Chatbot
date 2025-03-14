@@ -21,7 +21,7 @@ module.exports = (app) => {
             if (results.length > 0) {
                 // Lưu masv khi đăng nhập thành công
                 masvlogin = results[0].masv;
-                res.redirect('/thoikhoabieu.html')
+                res.redirect('/home.html')
             } else {
                
                 res.redirect('/?error=ma sv hoac mat khau sai!')
