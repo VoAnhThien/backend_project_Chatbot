@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Thời Khóa Biểu</title>
+</head>
+<body>
+    <form id="monHocForm">
+        <h1>Thêm Thời Khóa Biểu</h1>
+        <table>
+            <tr><td>Mã Môn Học</td> <td><input type="text" id="mamh" name="mamh"></td></tr>
+            <tr><td>Tên Môn Học</td> <td><input type="text" id="tenmh" name="tenmh"></td></tr>
+            <tr><td>Tên Giảng Viên</td> <td><input type="text" id="giangvien" name="giangvien"></td></tr>
+            <tr><td></td> <td><button type="submit">Thêm</button></td></tr>
+        </table>
+    </form>
+
+    <script>
+        document.getElementById('monHocForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = {
+                mamh: document.getElementById('mamh').value,
+                tenmh: document.getElementById('tenmh').value,
+                giangvien: document.getElementById('giangvien').value
+            };
+
+            const response = await fetch('http://localhost:3000/addMonHoc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            alert(result.message || result.error);
+        });
+    </script>
+</body>
+</html>
