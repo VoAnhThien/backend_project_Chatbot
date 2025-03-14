@@ -22,7 +22,8 @@ module.exports = (app) => {
                 res.json({
                     tensv: sinhvien.tensv,
                     lop: sinhvien.lop,
-                    masv: sinhvien.masv
+                    masv: sinhvien.masv,
+                    hinhanh: sinhvien.hinhanh
                 });
             }
         });
