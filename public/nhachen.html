@@ -1,21 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chu</title>
+    <title>Thêm Nhắc Nhở</title>
+   
 </head>
 <body>
-    <form action=""name="formNhacHen">
-        <table border="1"><tr>
-            <th>Nhac hen</th>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
+
+        <h1>Thêm Nhắc Nhở</h1>
+        <form action="/nhachen" method="post" id="nhachenForm">
+
+                <label for="STT">STT:</label>
+                <input type="text" id="STT" name="STT" required>
+           
+
+                <label for="tennh">Tên Nhắc Nhở:</label>
+                <input type="text" id="tennh" name="tennh" required>
+           
+
             
-        </table>
-    </form>
-    
+                <label for="ngaybatdau">Ngày Bắt Đầu:</label>
+                <input type="datetime-local" id="ngaybatdau" name="ngaybatdau" required>
+          
+
+            
+                <label for="ngayketthuc">Ngày Kết Thúc:</label>
+                <input type="datetime-local" id="ngayketthuc" name="ngayketthuc" required>
+            
+
+           
+                <label for="masv">Mã Sinh Viên:</label>
+                <input type="text" id="masv" name="masv" required>
+          
+
+            <button type="submit" name="themnhachen" value="themnhachen">thêm nhắc hẹn </button>
+        </form>
+  
+
+    <script>
+         const baoloi=new URLSearchParams(window.location.search);
+            const error=baoloi.get('error');
+            if(error){
+                document.getElementById('message').textContent=error;
+            }else{
+                document.getElementById('message').textContent='Thêm nhắc hẹn thành công';
+            }
+    </script>
 </body>
 </html>
+
