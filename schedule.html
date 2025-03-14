@@ -42,7 +42,7 @@
 <body>
     <h2>Thời Khóa Biểu Cá Nhân</h2>
     <input type="date" id="chonNgay" onchange="capNhatTuan()">
-    <button onclick="themLich()">Thêm Lịch</button>
+    <button id="themLichBtn" onclick="themLich()">Thêm Lịch</button>
     <table>
         <tr>
             <th>Thứ Hai</th>
@@ -63,64 +63,75 @@
             <td id="sun"></td>
         </tr>
     </table>
+
     <script>
         function capNhatTuan() {
-            let chonNgay = new Date(document.getElementById("chonNgay").value);
+            let chonNgay = document.getElementById("chonNgay").value;
+            if (!chonNgay) return;
+
             let ngayTrongTuan = new Date(chonNgay);
-            ngayTrongTuan.setDate(chonNgay.getDate() - chonNgay.getDay() + 1);
+            ngayTrongTuan.setDate(ngayTrongTuan.getDate() - ngayTrongTuan.getDay() + 1);
             
             let days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
             for (let i = 0; i < 7; i++) {
                 let date = new Date(ngayTrongTuan);
                 date.setDate(ngayTrongTuan.getDate() + i);
-                document.getElementById(days[i]).dataset.date = date.toISOString().split('T')[0];
+                document.getElementById(days[i]).setAttribute("data-date", date.toISOString().split('T')[0]);
             }
         }
 
-        function themLich () {
+        function themLich() {
             let day = prompt("Nhập thứ (mon/tue/wed/thu/fri/sat/sun):");
+            if (!document.getElementById(day)) {
+                alert("Thứ nhập không hợp lệ!");
+                return;
+            }
+
             let name = prompt("Nhập tên lịch:");
             let time = prompt("Nhập thời gian (HH:MM):");
             let note = prompt("Nhập ghi chú:");
-            
-            let date = document.getElementById(day).dataset.date;
+
+            if (!name || !time || !/^\d{2}:\d{2}$/.test(time)) {
+                alert("Thông tin nhập không hợp lệ!");
+                return;
+            }
+
+            let parent = document.getElementById(day);
+            let date = parent.getAttribute("data-date");
             if (!date) {
                 alert("Vui lòng chọn ngày để xác định thời khóa biểu trong tuần");
                 return;
             }
+
+            let timeMoi = parseTime(time);
+            let TKBCN = Array.from(parent.children);
             
-            if (day && name && time) {
-                let TKBCN = document.getElementById(day).children;
-                let timeMoi = parseTime(time);
-                
-                for (let i = 0; i < TKBCN.length; i++) {
-                    let timeTruoc = parseTime(TKBCN[i].dataset.time);
-                    if (Math.abs(timeTruoc - timeMoi) < 60) {
-                        alert("Thời gian lịch phải cách ít nhất 1 giờ.");
-                        return;
-                    }
+            for (let item of TKBCN) {
+                let timeTruoc = parseTime(item.dataset.time);
+                if (Math.abs(timeTruoc - timeMoi) < 60) {
+                    alert("Thời gian lịch phải cách ít nhất 1 giờ.");
+                    return;
                 }
-                
-                let motLich = `<div class='schedule-item' data-time='${time}'>
-                    <strong>${name}</strong><br>
-                    🕒 ${time} - 📅 ${date}<br>
-                    📝 ${note}<br>
-                    <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
-                    <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>
-                </div>`;
-                
-                document.getElementById(day).appendChild(tao1Lich(motLich, time));
-                sapXepLich(day);
             }
+
+            let motLich = document.createElement("div");
+            motLich.className = "schedule-item";
+            motLich.dataset.time = time;
+            motLich.innerHTML = `<strong>${name}</strong><br>
+                🕒 ${time} - 📅 ${date}<br>
+                📝 ${note}<br>
+                <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
+                <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
+
+            parent.appendChild(motLich);
+            sapXepLich(day);
         }
-        
-        function tao1Lich(html, time) {
-            let div = document.createElement("div");
-            div.innerHTML = html;
-            div.dataset.time = time;
-            return div.firstChild;
+
+        function parseTime(time) {
+            let [hour, minute] = time.split(":").map(Number);
+            return hour * 60 + minute;
         }
-        
+
         function sapXepLich(day) {
             let parent = document.getElementById(day);
             let TKBCN = Array.from(parent.children);
@@ -128,29 +139,28 @@
             parent.innerHTML = "";
             TKBCN.forEach(s => parent.appendChild(s));
         }
-        
-        function parseTime (time) {
-            let parts = time.split(":");
-            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
-        }
-        
-        function chinhSuaLich (element) {
+
+        function chinhSuaLich(element) {
             let parent = element.parentElement;
             let name = prompt("Nhập tên lịch mới:", parent.children[0].innerText);
             let time = prompt("Nhập thời gian mới:", parent.dataset.time);
             let note = prompt("Nhập ghi chú mới:", parent.children[2].innerText);
-            
-            if (name && time) {
-                parent.innerHTML = `<strong>${name}</strong><br>
-                    🕒 ${time} - 📅 ${parent.parentElement.dataset.date}<br>
-                    📝 ${note}<br>
-                    <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
-                    <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
-                parent.dataset.time = time;
-                sapXepLich(parent.parentElement.id);
+
+            if (!name || !time || !/^\d{2}:\d{2}$/.test(time)) {
+                alert("Thông tin nhập không hợp lệ!");
+                return;
             }
+
+            parent.dataset.time = time;
+            parent.innerHTML = `<strong>${name}</strong><br>
+                🕒 ${time} - 📅 ${parent.parentElement.getAttribute("data-date")}<br>
+                📝 ${note}<br>
+                <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
+                <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
+
+            sapXepLich(parent.parentElement.id);
         }
-        
+
         function xoaLich(element) {
             element.parentElement.remove();
         }

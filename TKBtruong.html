@@ -1,58 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <title> THỜI KHÓA BIỂU</title>
-    </head>
-    <body>
-        <h2> STUDENT SCHEDULE</h2>
-        <button>TKB Cá Nhân</button>
-    <button>TKB Trường</button>
-    <label>Tuần:</label> <span>4</span>
-    <label>Từ:</label> <span>03/03/2025 - 09/03/2025</span>
-    <br><br>
-    <h2>Thời khóa biểu cá nhân</h2>
-    <table border="1" width="100%" border-collapse:collapse>
-       <tr>
-        <th></th>
-        <th>Thứ 2</th>
-        <th>Thứ 3</th>
-        <th>Thứ 4</th>
-        <th>Thứ 5</th>
-        <th>Thứ 6</th>
-        <th>Thứ 7</th>
-       </tr>
-       <tr>
-        <td> Sáng</td>
-        <td>Tham gia workshop<br>07:00, Hội trường B</td>
-        <td>Tham gia thảo luận <br>Tech talk in action<br>08:30, Hội trường B</td>
-        <td>Học bù Nhập môn <br>Web và UD<br>07:00, Phòng 803</td>
-        <td></td>
-        <td></td>
-        <td></td>
-       </tr>
-       <tr>
-        <td>Chiều</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>Làm trắc nghiệm <br>“Tuổi trẻ STU với <br> biên giới Biển đảo <br>Việt Nam” năm <br>2025  Online</td>
-        <td></td>
-       </tr>
-       <tr>
-        <td>Tối</td>
-        <td></td>
-        <td>Làm bài tập <br>TMDT 20:00 Discord <br>Toeic 18:30 , Online</td>
-        <td></td>
-        <td>Toeic 18:30,<br> Online</td>
-        <td></td>
-        <td>Tham gia CT: Miss & Mister <br> sinh viên STU <br> 2025  18:00, HTB</td>
-       </tr>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THỜI KHÓA BIỂU</title>
+    <style>
+        #themLichBtn {
+            position: absolute;
+            right: 20px;
+            top: 100px; 
+        }
+    </style>
+</head>
+<body> <h2>STUDENT SCHEDULE</h2>
+    <label for="weekSelect">TKB theo tuần</label>
+    <select id="weekSelect">
+        <option value="" disabled selected>Chọn tuần</option>
+    </select>
+    <script>
+        document.getElementById("weekSelect").addEventListener("focus", function() {
+            let select = this;
+            if (select.options.length === 1) { 
+                let startDate = new Date("2025-02-10"); 
+                for (let i = 24; i <= 43; i++) {
+                    let endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + 6);
+                    let optionText = `Tuần ${i} [Từ ${startDate.toLocaleDateString('vi-VN')} -- Đến ${endDate.toLocaleDateString('vi-VN')}]`;
+                    
+                    let option = document.createElement("option");
+                    option.value = `week${i}`;
+                    option.textContent = optionText;
+                    
+                    select.appendChild(option);
+                    startDate.setDate(startDate.getDate() + 7);
+                }
+            }
+        });
+    </script>
 
-
-    </table>
-    </body>
     
+
+    <h2>Thời khóa biểu trường</h2>
+
+    <table border="1" width="100%" cellspacing="0" cellpadding="5">
+        <tr>
+            <th>Buổi</th>
+            <th>THỨ HAI</th>
+            <th>THỨ BA</th>
+            <th>THỨ TƯ</th>
+            <th>THỨ NĂM</th>
+            <th>THỨ SÁU</th>
+            <th>THỨ BẢY</th>
+            <th>CHỦ NHẬT</th>
+        </tr>
+        <!-- Sáng -->
+        <tr>
+            <td><strong>Ca 1: 7:00-9:35</strong></td>
+            <td></td>
+            <td></td>
+            <td rowspan="1">Thực hành Lập trình <br>ứng dụng cơ sở dữ liệu <br>Phòng: PM11_B301</td>
+            <td rowspan="1">Lập trình <br>ứng dụng cơ sở dữ liệu <br>Phòng:703</td>
+            <td rowspan="1">Quản trị cơ sở dữ liệu <br>Phòng: C704</td>
+            <td rowspan="1">Công nghệ phần mềm <br>Phòng: C808</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><strong>Ca 2: 9:35-12:05</strong></td>
+            <td rowspan="1">Thương mại điện tử <br><i>Phòng: C803</i></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td rowspan="1">Nhập môn Web và ứng dụng <br><i>Phòng: C808</i></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <!-- Chiều -->
+        <tr>
+            <td><strong>Ca 3: 12:35-15:05</strong></td>
+            <td></td>
+            <td rowspan="1">Kiểm thử phần mềm <br><i>Phòng: C808</i></td>
+            <td></td>
+            <td rowspan="1">Thực hành <br>Nhập môn Web và ứng dụng <br>Phòng: PM02_B308</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><strong>Ca 4: 15:10-17:40</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Tiếng anh 4 <br><br></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <button id="themLichBtn" onclick="window.location.href='schedule.html'">Lịch cá nhân</button>
+</body>
 </html>
