@@ -7,7 +7,7 @@
     <h1>Them sinh vien</h1>
 </head>
 <body>
-    <form action="/addsinhvien" method="post" name="formThemSinhVien">
+    <form id="formThemSinhVien" onsubmit="return xuLyThemSV(event)">
         <table><tr>
             <td><label for="masv">Ma sinh vien</label></td>
             <td><input type="text" name="masv" id="masv"></td>
@@ -30,7 +30,6 @@
                 <input type="radio" name="gioitinh" id="Nam" value="nam">Nam
                 <input type="radio" name="gioitinh" id="Nữ" value="nu">Nu
             </td>
-            
         </tr>
         <tr>
             <td><label for="lop">Lop</label></td>
@@ -57,24 +56,41 @@
             <td><input type="text" name="email" id="email"></td>
         </tr>
         <tr>
-            
             <td><input type="submit" name="themsinhvien" value="Them sinh vien"></td>
-        
+        </tr>
         </table>
     </form>
 
-    <div id="message" style="color: red; margin-top: 10px; text-align: center;"></div>
+    
 
-    <div class="message" id="message">
-        <script>
-            const baoloi=new URLSearchParams(window.location.search);
-            const error=baoloi.get('error');
-            if(error){
-                document.getElementById('message').textContent=error;
-            }else{
-                document.getElementById('message').textContent='Thêm sinh viên thành công';
+    <script>
+        async function xuLyThemSV(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                const response = await fetch('/addsinhvien', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const thongbao = await response.json();
+                alert(thongbao.message || thongbao.error);
+                if (thongbao.success) {
+                    document.getElementById('formThemSinhVien').reset();
+                }
+            } catch (error) {
+                alert('Có lỗi xảy ra khi gửi yêu cầu');
             }
-        </script>
-    </div>
+            return false;
+        }
+    </script>
 </body>
 </html>

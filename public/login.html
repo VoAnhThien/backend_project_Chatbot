@@ -6,24 +6,28 @@
     <title>Đăng nhập sinh viên</title>
 </head>
 <body>
-    <h1><center>Sinh Vien</center></h1>
+    
     
     <form id="loginForm" action="/login" method="POST">
-        <table width="100%">
-            <tr>
-                <td><label for="masv">MaSV</label></td>
-                <td><input type="text" id="masv" name="masv" required></td>
-            </tr>
-            <tr>
-                <td><label for="password">Password</label></td>
-                <td><input type="password" id="password" name="password" required></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="Dang Nhap" name="login">
-                </td>
-            </tr>
-        </table>
+
+
+        <div class="login-container" >
+            <img src="" alt="" class="logo">
+            <h2>STU - Thời khóa biểu</h2>
+            <h3>Đăng nhập</h3>
+            <table >
+                <tr>
+                    <td><input type="text" id="masv" name="masv" placeholder="Tên đăng nhập/Email" class="input-field"></td> 
+                </tr> 
+                <tr>
+                    <td><input type="password" id="password" name="password" placeholder="Mật khẩu" class="input-field"></td>
+                </tr>
+                <tr>
+                    <td><button class="login-btn">Đăng nhập</button></td> 
+                </tr>
+            </table>
+            <a href="quenmatkhau.html"  class="quenmatkhau">Quên mật khẩu?</a>
+        </div>
     </form>
 
     <div id="message" style="color: red; margin-top: 10px; text-align: center;"></div>

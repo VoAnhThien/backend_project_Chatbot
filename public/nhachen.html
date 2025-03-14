@@ -4,48 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Nhắc Nhở</title>
-   
 </head>
 <body>
+    <h1>Thêm Nhắc Nhở</h1>
+    <form id="nhachenForm" onsubmit="return xuLyThemNhacHen(event)">
+        
 
-        <h1>Thêm Nhắc Nhở</h1>
-        <form action="/nhachen" method="post" id="nhachenForm">
+        <label for="tennh">Tên Nhắc Nhở:</label>
+        <input type="text" id="tennh" name="tennh" required>
 
-                <label for="STT">STT:</label>
-                <input type="text" id="STT" name="STT" required>
-           
+        <label for="ngaybatdau">Ngày Bắt Đầu:</label>
+        <input type="datetime-local" id="ngaybatdau" name="ngaybatdau" required>
 
-                <label for="tennh">Tên Nhắc Nhở:</label>
-                <input type="text" id="tennh" name="tennh" required>
-           
+        <label for="ngayketthuc">Ngày Kết Thúc:</label>
+        <input type="datetime-local" id="ngayketthuc" name="ngayketthuc" required>
 
-            
-                <label for="ngaybatdau">Ngày Bắt Đầu:</label>
-                <input type="datetime-local" id="ngaybatdau" name="ngaybatdau" required>
-          
+        <label for="masv">Mã Sinh Viên:</label>
+        <input type="text" id="masv" name="masv" required>
 
-            
-                <label for="ngayketthuc">Ngày Kết Thúc:</label>
-                <input type="datetime-local" id="ngayketthuc" name="ngayketthuc" required>
-            
-
-           
-                <label for="masv">Mã Sinh Viên:</label>
-                <input type="text" id="masv" name="masv" required>
-          
-
-            <button type="submit" name="themnhachen" value="themnhachen">thêm nhắc hẹn </button>
-        </form>
-  
+        <button type="submit" name="themnhachen" value="themnhachen">Thêm nhắc hẹn</button>
+    </form>
 
     <script>
-         const baoloi=new URLSearchParams(window.location.search);
-            const error=baoloi.get('error');
-            if(error){
-                document.getElementById('message').textContent=error;
-            }else{
-                document.getElementById('message').textContent='Thêm nhắc hẹn thành công';
+        async function xuLyThemNhacHen(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                const response = await fetch('/nhachen', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const thongbao = await response.json();
+                alert(thongbao.message || thongbao.error);
+                if (thongbao.success) {
+                    document.getElementById('nhachenForm').reset();
+                }
+            } catch (error) {
+                alert('Có lỗi xảy ra khi gửi yêu cầu');
             }
+            return false;
+        }
     </script>
 </body>
 </html>

@@ -2,12 +2,15 @@ const connection = require('../connectData.js');
 
 module.exports = (app) => {
     app.post('/nhachen', (req, res) => {
-        const {STT, tennh, ngaybatdau, ngayketthuc, masv} = req.body;
-        const sql = 'INSERT INTO nhachen (STT, tennh, ngaybatdau, ngayketthuc, masv) VALUES (?,?,?,?,?)';
-        connection.query(sql, [STT, tennh, ngaybatdau, ngayketthuc, masv], (err, results) => {
+        const {tennh, ngaybatdau, ngayketthuc, masv} = req.body;
+        if(!tennh || !ngaybatdau || !ngayketthuc || !masv){
+            return res.status(400).json({error:'Vui lòng điền đầy đủ thông tin'});
+        }
+        const sql = 'INSERT INTO nhachen (tennh, ngaybatdau, ngayketthuc, masv) VALUES (?,?,?,?)';
+        connection.query(sql, [tennh, ngaybatdau, ngayketthuc, masv], (err, results) => {
             if (err) {
                 console.error('Lỗi truy vấn database:', err);
-                res.status(500).json({ error: 'Lỗi server' });
+                res.status(500).json({ error: 'Không thể thêm nhắc hẹn' });
             }
             else{
                 
