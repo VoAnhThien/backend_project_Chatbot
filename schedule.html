@@ -63,8 +63,81 @@
             <td id="sun"></td>
         </tr>
     </table>
+ <!-- hộp thoại nhập khi thêm lịch -->
+    <div id="modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); z-index: 1000;">
+        <h3>Thêm Lịch Mới</h3>
 
+        <label>Chọn ngày:</label>
+        <input type="date" id="modalDate" onchange="capNhatNgayTuModal()"><br><br>
+
+        <label>Chọn thứ:</label>
+        <select id="modalDay">
+            <option value="mon">Thứ Hai</option>
+            <option value="tue">Thứ Ba</option>
+            <option value="wed">Thứ Tư</option>
+            <option value="thu">Thứ Năm</option>
+            <option value="fri">Thứ Sáu</option>
+            <option value="sat">Thứ Bảy</option>
+            <option value="sun">Chủ Nhật</option>
+        </select><br><br>
+
+        <label>Tên lịch:</label>
+        <input type="text" id="modalName"><br><br>
+
+        <label>Thời gian (HH:MM):</label>
+        <input type="time" id="modalTime"><br><br>
+
+        <label>Ghi chú:</label>
+        <input type="text" id="modalNote"><br><br>
+
+        <button onclick="luuLich()">OK</button>
+        <button onclick="dongModal()">Hủy</button>
+    </div>
+    <div 
+    id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
+    </div>
+
+     <!-- hộp thoại chỉnh sửa lịch đã có sẵn -->
+     <div id="editModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); z-index: 1000;">
+        <h3>Chỉnh Sửa Lịch</h3>
+        <label>Chọn ngày:</label>
+        <input type="date" id="editDate"><br><br>
+
+        <label>Tên lịch:</label>
+        <input type="text" id="editName"><br><br>
+    
+        <label>Thời gian (HH:MM):</label>
+        <input type="time" id="editTime"><br><br>
+    
+        <label>Ghi chú:</label>
+        <input type="text" id="editNote"><br><br>
+    
+        <button onclick="luuChinhSua()">Lưu</button>
+        <button onclick="dongEditModal()">Hủy</button>
+    </div>
+    <div id="editOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);"></div>
     <script>
+        function capNhatNgayTuModal() {
+            let modalDate = document.getElementById("modalDate").value;
+            if (!modalDate) return;
+
+            // Cập nhật ngày vào #chonNgay
+            document.getElementById("chonNgay").value = modalDate;
+
+            // Xác định thứ trong tuần
+            let ngay = new Date(modalDate);
+            let thu = ngay.getDay(); // 0 = Chủ Nhật, 1 = Thứ Hai, ..., 6 = Thứ Bảy
+
+            let days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+            let thuTuongUng = days[thu]; // Lấy thứ tương ứng
+
+            // Cập nhật vào #modalDay
+            document.getElementById("modalDay").value = thuTuongUng;
+
+            // Gọi lại cập nhật tuần để đảm bảo lịch hiển thị đúng
+            capNhatTuan();
+        }
+
         function capNhatTuan() {
             let chonNgay = document.getElementById("chonNgay").value;
             if (!chonNgay) return;
@@ -81,51 +154,47 @@
         }
 
         function themLich() {
-            let day = prompt("Nhập thứ (mon/tue/wed/thu/fri/sat/sun):");
-            if (!document.getElementById(day)) {
-                alert("Thứ nhập không hợp lệ!");
-                return;
-            }
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+}
 
-            let name = prompt("Nhập tên lịch:");
-            let time = prompt("Nhập thời gian (HH:MM):");
-            let note = prompt("Nhập ghi chú:");
+function dongModal() {
+    document.getElementById("modal").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
 
-            if (!name || !time || !/^\d{2}:\d{2}$/.test(time)) {
-                alert("Thông tin nhập không hợp lệ!");
-                return;
-            }
+function luuLich() {
+    let day = document.getElementById("modalDay").value;
+    let name = document.getElementById("modalName").value;
+    let time = document.getElementById("modalTime").value;
+    let note = document.getElementById("modalNote").value;
 
-            let parent = document.getElementById(day);
-            let date = parent.getAttribute("data-date");
-            if (!date) {
-                alert("Vui lòng chọn ngày để xác định thời khóa biểu trong tuần");
-                return;
-            }
+    if (!name || !time) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
 
-            let timeMoi = parseTime(time);
-            let TKBCN = Array.from(parent.children);
-            
-            for (let item of TKBCN) {
-                let timeTruoc = parseTime(item.dataset.time);
-                if (Math.abs(timeTruoc - timeMoi) < 60) {
-                    alert("Thời gian lịch phải cách ít nhất 1 giờ.");
-                    return;
-                }
-            }
+    let parent = document.getElementById(day);
+    let date = parent.getAttribute("data-date");
+    if (!date) {
+        alert("Vui lòng chọn ngày để xác định thời khóa biểu trong tuần");
+        return;
+    }
 
-            let motLich = document.createElement("div");
-            motLich.className = "schedule-item";
-            motLich.dataset.time = time;
-            motLich.innerHTML = `<strong>${name}</strong><br>
-                🕒 ${time} - 📅 ${date}<br>
-                📝 ${note}<br>
-                <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
-                <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
+    let motLich = document.createElement("div");
+    motLich.className = "schedule-item";
+    motLich.dataset.time = time;
+    motLich.innerHTML = `<strong>${name}</strong><br>
+        🕒 ${time} - 📅 ${date}<br>
+        📝 ${note}<br>
+        <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
+        <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
 
-            parent.appendChild(motLich);
-            sapXepLich(day);
-        }
+    parent.appendChild(motLich);
+    sapXepLich(day);
+    
+    dongModal(); // Đóng modal sau khi lưu
+}
 
         function parseTime(time) {
             let [hour, minute] = time.split(":").map(Number);
@@ -139,31 +208,68 @@
             parent.innerHTML = "";
             TKBCN.forEach(s => parent.appendChild(s));
         }
+        // nút chỉnh sửa trong tkb
+        let currentEditElement = null;
 
         function chinhSuaLich(element) {
-            let parent = element.parentElement;
-            let name = prompt("Nhập tên lịch mới:", parent.children[0].innerText);
-            let time = prompt("Nhập thời gian mới:", parent.dataset.time);
-            let note = prompt("Nhập ghi chú mới:", parent.children[2].innerText);
+            currentEditElement = element.parentElement;
 
-            if (!name || !time || !/^\d{2}:\d{2}$/.test(time)) {
+            let name = currentEditElement.querySelector("strong").innerText;
+            let time = currentEditElement.dataset.time;
+            let note = currentEditElement.querySelector(".schedule-note")?.innerText || "";
+            let date = currentEditElement.parentElement.getAttribute("data-date");
+
+            document.getElementById("editDate").value = date;
+            document.getElementById("editName").value = name;
+            document.getElementById("editTime").value = time;
+            document.getElementById("editNote").value = note;
+
+            document.getElementById("editModal").style.display = "block";
+            document.getElementById("editOverlay").style.display = "block";
+        }
+
+        function luuChinhSua() {
+            let date = document.getElementById("editDate").value;
+            let name = document.getElementById("editName").value;
+            let time = document.getElementById("editTime").value;
+            let note = document.getElementById("editNote").value;
+
+            if (!name || !time.match(/^\d{2}:\d{2}$/) || !date) {
                 alert("Thông tin nhập không hợp lệ!");
                 return;
             }
 
-            parent.dataset.time = time;
-            parent.innerHTML = `<strong>${name}</strong><br>
-                🕒 ${time} - 📅 ${parent.parentElement.getAttribute("data-date")}<br>
-                📝 ${note}<br>
+            let oldParent = currentEditElement.parentElement;
+            let days = {"mon": 1, "tue": 2, "wed": 3, "thu": 4, "fri": 5, "sat": 6, "sun": 0};
+            let newDate = new Date(date);
+            let newDay = Object.keys(days).find(key => days[key] === newDate.getDay());
+            let newParent = document.getElementById(newDay);
+
+            currentEditElement.dataset.time = time;
+            currentEditElement.innerHTML = `
+                <strong>${name}</strong><br>
+                🕒 ${time} - 📅 ${date}<br>
+                <span class='schedule-note'>📝 ${note}</span><br>
                 <span class='edit-btn' onclick='chinhSuaLich(this)'>✏️</span>
-                <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>`;
+                <span class='delete-btn' onclick='xoaLich(this)'>🗑️</span>
+            `;
 
-            sapXepLich(parent.parentElement.id);
+            newParent.appendChild(currentEditElement);
+            sapXepLich(newDay);
+            dongEditModal();
         }
 
+        // Xác nhận trước khi xóa lịch
         function xoaLich(element) {
-            element.parentElement.remove();
+            if (confirm("Bạn có chắc chắn muốn xóa lịch này không?")) {
+                element.parentElement.remove();
+            }
         }
+        function dongEditModal() {
+            document.getElementById("editModal").style.display = "none";
+            document.getElementById("editOverlay").style.display = "none";
+        }
+       
     </script>
 </body>
 </html>
