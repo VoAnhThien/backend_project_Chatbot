@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Thời Khóa Biểu</title>
+</head>
+<body>
+    <form action="" id="formThoiKhoaBieu">
+        <h1>Thêm Thời Khóa Biểu</h1>
+        <table>
+            <tr><td>Thứ</td> <td><input type="number" id="thu" name="thu"></td></tr>
+            <tr><td>Ca</td> <td><input type="number" id="ca" name="ca"></td></tr>
+            <tr><td>Phòng</td> <td><input type="text" id="phong" name="phong"></td></tr>
+            <tr><td>Mã Sinh Viên</td> <td><input type="text" id="masv" name="masv"></td></tr>
+            <tr><td>Mã Môn Học</td> <td><input type="text" id="mamh" name="mamh"></td></tr>
+            <tr><td>Ngày Bắt Đầu</td> <td><input type="date" id="ngaybatdau" name="ngaybatdau"></td></tr>
+            <tr><td>Ngày Kết Thúc</td> <td><input type="date" id="ngayketthuc" name="ngayketthuc"></td></tr>
+            <tr><td></td> <td><input type="submit" value="Thêm"></td></tr>
+        </table>
+    </form>
+
+    <script>
+        document.getElementById('formThoiKhoaBieu').addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+
+            // Lấy dữ liệu từ form
+            const data = {
+                thu: document.getElementById('thu').value,
+                ca: document.getElementById('ca').value,
+                phong: document.getElementById('phong').value,
+                masv: document.getElementById('masv').value,
+                mamh: document.getElementById('mamh').value,
+                ngaybatdau: document.getElementById('ngaybatdau').value,
+                ngayketthuc: document.getElementById('ngayketthuc').value
+            };
+
+            try {
+                const response = await fetch('/addThoiKhoaBieu', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Thêm thời khóa biểu thành công!');
+                } else {
+                    alert('Lỗi: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Lỗi:', error);
+                alert('Lỗi khi thêm dữ liệu!');
+            }
+        });
+    </script>
+</body>
+</html>
